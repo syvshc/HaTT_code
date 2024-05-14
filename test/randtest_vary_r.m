@@ -33,19 +33,19 @@ ell = 60;
 % 4. round_randorth (randorth)
 % 5. round_orthrand (orthrand)
 % 6. round_twosided (twosided)
-% 1. hadamard_round_randorth (HRO)
-% 2. hadamard_round_randorth_without_svd (HRO_no_svd)
+% 1. hadamard_round_randorth (HaTT)
+% 2. hadamard_round_randorth_without_svd (HaTT_no_svd)
 % 1 and 2 are algorithms we formulated, 3 is from Oseledets (2011) and 4 and 5 are from Daas (2023)
 
 L = length(test_ranks);
-errors_HRO = zeros(L, S);
-errors_HRO_no_svd = zeros(L, S);
+errors_HaTT = zeros(L, S);
+errors_HaTT_no_svd = zeros(L, S);
 errors_TTrounding = zeros(L, S);
 errors_randorth = zeros(L, S);
 errors_orthrand = zeros(L, S);
 errors_twosided = zeros(L, S);
-time_HRO = zeros(L, S);
-time_HRO_no_svd = zeros(L, S);
+time_HaTT = zeros(L, S);
+time_HaTT_no_svd = zeros(L, S);
 time_TTrounding = zeros(L, S);
 time_randorth = zeros(L, S);
 time_orthrand = zeros(L, S);
@@ -100,40 +100,40 @@ for i = 1 : L
     end
 
     try
-      HRO = tic;
+      HaTT = tic;
       [x, time_HPCRL(i, j), time_HMcore0(i, j)] = hadamard_round_randorth(y, z, ell);
-      time_HRO(i, j) = toc(HRO);
+      time_HaTT(i, j) = toc(HaTT);
     catch
-      time_HRO(i, j) = inf;
+      time_HaTT(i, j) = inf;
       x = [0; 1; 1];
     end
     try
-      errors_HRO(i, j) = norm(tt - x) / normtt;
+      errors_HaTT(i, j) = norm(tt - x) / normtt;
     catch
       try
         X = full(x);
-        errors_HRO(i, j) = norm(TT-X) / normTT;
+        errors_HaTT(i, j) = norm(TT-X) / normTT;
       catch
-        errors_HRO(i, j) = inf;
+        errors_HaTT(i, j) = inf;
       end
     end
 
     try
-      HRO_no_svd = tic;
+      HaTT_no_svd = tic;
       [x, time_HPCRL_no_svd(i, j), time_HMcore0_no_svd(i, j)] = hadamard_round_randorth_without_svd(y, z, ell);
-      time_HRO_no_svd(i, j) = toc(HRO_no_svd);
+      time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
     catch
-      time_HRO_no_svd(i, j) = inf;
+      time_HaTT_no_svd(i, j) = inf;
       x = [0; 1; 1];
     end
     try
-      errors_HRO_no_svd(i, j) = norm(tt - x) / normtt;
+      errors_HaTT_no_svd(i, j) = norm(tt - x) / normtt;
     catch
       try
         X = full(x);
-        errors_HRO_no_svd(i, j) = norm(TT-X) / normTT;
+        errors_HaTT_no_svd(i, j) = norm(TT-X) / normTT;
       catch
-        errors_HRO_no_svd(i, j) = inf;
+        errors_HaTT_no_svd(i, j) = inf;
       end
     end
     

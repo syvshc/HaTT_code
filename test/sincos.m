@@ -28,19 +28,19 @@ S = 7;
 % 2. round_randorth (randorth)
 % 3. round_orthrand (orthrand)
 % 4. round_twosided (twosided)
-% 5. hadamard_round_randorth (HRO)
-% 6. hadamard_round_randorth_without_svd (HRO_no_svd)
+% 5. hadamard_round_randorth (HaTT)
+% 6. hadamard_round_randorth_without_svd (HaTT_no_svd)
 % 5 and 6 are algorithms we formulated, 1 is from Oseledets (2011) and 2, 3, 4 are from Daas (2023)
 
 L = length(test_ranks);
-errors_HRO = zeros(L, S);
-errors_HRO_no_svd = zeros(L, S);
+errors_HaTT = zeros(L, S);
+errors_HaTT_no_svd = zeros(L, S);
 errors_TTrounding = zeros(L, S);
 errors_randorth = zeros(L, S);
 errors_orthrand = zeros(L, S);
 errors_twosided = zeros(L, S);
-time_HRO = zeros(L, S);
-time_HRO_no_svd = zeros(L, S);
+time_HaTT = zeros(L, S);
+time_HaTT_no_svd = zeros(L, S);
 time_TTrounding = zeros(L, S);
 time_randorth = zeros(L, S);
 time_orthrand = zeros(L, S);
@@ -55,15 +55,15 @@ tt = y .* z
 for i = 1 : L
   ell = test_ranks(i);
   for j = 1 : S
-    HRO = tic;
+    HaTT = tic;
     x = hadamard_round_randorth(y, z, ell);
-    time_HRO(i, j) = toc(HRO);
-    errors_HRO(i, j) = norm(tt - x) / norm(tt);
+    time_HaTT(i, j) = toc(HaTT);
+    errors_HaTT(i, j) = norm(tt - x) / norm(tt);
 
-    HRO_no_svd = tic;
+    HaTT_no_svd = tic;
     x = hadamard_round_randorth_without_svd(y, z, ell);
-    time_HRO_no_svd(i, j) = toc(HRO_no_svd);
-    errors_HRO_no_svd(i, j) = norm(tt - x) / norm(tt);
+    time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
+    errors_HaTT_no_svd(i, j) = norm(tt - x) / norm(tt);
 
     TTrounding = tic;
     x = round(y .* z, 1e-16, ell);

@@ -1,6 +1,6 @@
 function [varargout] = hadamard_round_randorth(Y, Z, varargin)
-% HADMARD_ROUND  Round the Hadamard product of two TT tensor with RandOrth
-% Y and Z are TT tensors of the same physics modes,
+% HADMARD_ROUND  Round the Hadamard product of two TT-tensor with RandOrth
+% Y and Z are TT-tensors of the same physics modes,
 % If the target TT-rank is not given, we'll use the size of each unfolding of Y as the default target TT-rank.
 
    % init X

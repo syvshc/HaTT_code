@@ -9,18 +9,18 @@ for fun_num = 1:2
   else
     t = linspace(-2.5*pi, 2.5*pi, 10);
   end
-  errors_HRO = zeros(L, S);
-  errors_HRO_no_svd = zeros(L, S);
+  errors_HaTT = zeros(L, S);
+  errors_HaTT_no_svd = zeros(L, S);
   errors_TTrounding = zeros(L, S);
   errors_randorth = zeros(L, S);
   errors_orthrand = zeros(L, S);
   errors_twosided = zeros(L, S);
   
-  time_HRO = zeros(L, S);
+  time_HaTT = zeros(L, S);
   time_HPCRL = zeros(L, S);
   time_HBilinearForm = zeros(L, S);
   
-  time_HRO_no_svd = zeros(L, S);
+  time_HaTT_no_svd = zeros(L, S);
   time_HPCRL_no_svd = zeros(L, S);
   time_HBilinearForm_no_svd = zeros(L, S);
   
@@ -52,7 +52,7 @@ for fun_num = 1:2
     iter_num = 100;
     %% start iteration
     for j = 1:S
-      HRO = tic;
+      HaTT = tic;
       for iter = 1:iter_num
         [x, time_HPCRL(i, j)] = hadamard_round_randorth(A, x, ell);
         x = x/norm(x);
@@ -60,11 +60,11 @@ for fun_num = 1:2
       HBF = tic;
       M_svd = HBilinearForm(A, x);
       time_HBilinearForm(i, j) = toc(HBF);
-      time_HRO(i, j) = toc(HRO);
-      errors_HRO(i, j) = abs(M_svd - act_M)/act_M ;
+      time_HaTT(i, j) = toc(HaTT);
+      errors_HaTT(i, j) = abs(M_svd - act_M)/act_M ;
   
       x = x1;
-      HRO_no_svd = tic;
+      HaTT_no_svd = tic;
       for iter = 1:iter_num
         [x, time_HPCRL_no_svd(i, j)] = hadamard_round_randorth_without_svd(A, x, ell);
         x = x/norm(x);
@@ -72,8 +72,8 @@ for fun_num = 1:2
       HBF_no_svd = tic;
       M_no_svd = HBilinearForm_without_svd(A, x);
       time_HBilinearForm_no_svd(i, j) = toc(HBF_no_svd);
-      time_HRO_no_svd(i, j) = toc(HRO_no_svd);
-      errors_HRO_no_svd(i, j) = abs(M_no_svd - act_M)/act_M;
+      time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
+      errors_HaTT_no_svd(i, j) = abs(M_no_svd - act_M)/act_M;
   
       x = x1;
       randorth = tic;
