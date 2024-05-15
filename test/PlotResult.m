@@ -18,17 +18,17 @@ function f = PlotResult(file)
     subplot(1, 3, 1)
 
 
-    errorbar(test_ranks, err_TTrounding, neg_TTrounding, pos_TTrounding,     'bo','markersize',6,'linewidth',1)
+    errorbar(test_ranks, err_TTrounding, neg_TTrounding, pos_TTrounding,     'o', 'Color', '#3570b6','markersize',6,'linewidth',1)
     ax = gca;
     ax.YScale = 'log';
     
     hold on
     
-    errorbar(test_ranks, err_randorth, neg_randorth, pos_randorth, 'g^','markersize',6,'linewidth',1)
-    errorbar(test_ranks, err_orthrand, neg_orthrand, pos_orthrand, 'm+','markersize',6,'linewidth',1)
-    errorbar(test_ranks, err_twosided, neg_twosided, pos_twosided, 'c*','markersize',6,'linewidth',1)
+    errorbar(test_ranks, err_randorth, neg_randorth, pos_randorth, '^', 'Color', '#23a6ba','markersize',6,'linewidth',1)
+    errorbar(test_ranks, err_orthrand, neg_orthrand, pos_orthrand, '+', 'Color', '#b482ba','markersize',6,'linewidth',1)
+    errorbar(test_ranks, err_twosided, neg_twosided, pos_twosided, '*', 'Color', '#c48f00','markersize',6,'linewidth',1)
     errorbar(test_ranks, err_HaTT, neg_HaTT, pos_HaTT,     'ks','markersize',6,'linewidth',1)
-    errorbar(test_ranks, err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'rx','markersize',6,'linewidth',1)
+    errorbar(test_ranks, err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x', 'Color', '#c45c30','markersize',6,'linewidth',1)
     
     hold off
     
@@ -36,35 +36,6 @@ function f = PlotResult(file)
     xlabel('Target ranks', 'FontSize', 18)
     ylabel('Relative Error', 'FontSize', 18)
     legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
-    set(gca,'FontSize',14,"FontName", "Times New Roman")
-    axis square;
-    
-    % Post-process timings
-    
-    [speedup_HaTT, neg_HaTT, pos_HaTT] = computeSpeedup(time_HaTT, time_TTrounding);
-    [speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeSpeedup(time_HaTT_no_svd, time_TTrounding);
-    [speedup_TTrounding, neg_TTrounding, pos_TTrounding] = computeSpeedup(time_TTrounding, time_TTrounding);
-    [speedup_randorth, neg_randorth, pos_randorth] = computeSpeedup(time_randorth, time_TTrounding);
-    [speedup_orthrand, neg_orthrand, pos_orthrand] = computeSpeedup(time_orthrand, time_TTrounding);
-    [speedup_twosided, neg_twosided, pos_twosided] = computeSpeedup(time_twosided, time_TTrounding);
-    
-    subplot(1, 3, 2)
-    
-    errorbar(test_ranks, speedup_TTrounding,       neg_TTrounding,       pos_TTrounding,       'bo-','markersize',6,'linewidth',1);
-    
-    hold on
-    
-    errorbar(test_ranks, speedup_randorth,  neg_randorth,  pos_randorth,  'g^-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, speedup_orthrand,  neg_orthrand,  pos_orthrand,  'm+-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, speedup_twosided, neg_twosided, pos_twosided, 'c*-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, speedup_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'rx-','markersize',6,'linewidth',1);
-    
-    hold off
-    % title("(b)")
-    xlabel('Target ranks', 'FontSize', 18)
-    ylabel('Speedup', 'FontSize', 18)
-    % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
 
@@ -77,17 +48,17 @@ function f = PlotResult(file)
     [times_HaTT, neg_HaTT, pos_HaTT] = computeTime(time_HaTT);
     [times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeTime(time_HaTT_no_svd);
 
-    subplot(1, 3, 3)
+    subplot(1, 3, 2)
 
-    errorbar(test_ranks, times_TTrounding,       neg_TTrounding,       pos_TTrounding,       'bo-','markersize',6,'linewidth',1);
+    errorbar(test_ranks, times_TTrounding,       neg_TTrounding,       pos_TTrounding,       'o-', 'Color', '#3570b6','markersize',6,'linewidth',1);
 
     hold on
 
-    errorbar(test_ranks, times_randorth,  neg_randorth,  pos_randorth,  'g^-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, times_orthrand,  neg_orthrand,  pos_orthrand,  'm+-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, times_twosided, neg_twosided, pos_twosided, 'c*-','markersize',6,'linewidth',1);
+    errorbar(test_ranks, times_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1);
+    errorbar(test_ranks, times_orthrand,  neg_orthrand,  pos_orthrand,  '+-', 'Color', '#b482ba','markersize',6,'linewidth',1);
+    errorbar(test_ranks, times_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1);
     errorbar(test_ranks, times_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1);
-    errorbar(test_ranks, times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'rx-','markersize',6,'linewidth',1);
+    errorbar(test_ranks, times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1);
     
     hold off
     % title("(c)")
@@ -96,4 +67,33 @@ function f = PlotResult(file)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
+
+        % Post-process timings
+    
+        [speedup_HaTT, neg_HaTT, pos_HaTT] = computeSpeedup(time_HaTT, time_TTrounding);
+        [speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeSpeedup(time_HaTT_no_svd, time_TTrounding);
+        [speedup_TTrounding, neg_TTrounding, pos_TTrounding] = computeSpeedup(time_TTrounding, time_TTrounding);
+        [speedup_randorth, neg_randorth, pos_randorth] = computeSpeedup(time_randorth, time_TTrounding);
+        [speedup_orthrand, neg_orthrand, pos_orthrand] = computeSpeedup(time_orthrand, time_TTrounding);
+        [speedup_twosided, neg_twosided, pos_twosided] = computeSpeedup(time_twosided, time_TTrounding);
+        
+        subplot(1, 3, 3)
+        
+        errorbar(test_ranks, speedup_TTrounding,       zeros(length(test_ranks), 1),       zeros(length(test_ranks), 1),       'o-', 'Color', '#3570b6','markersize',6,'linewidth',1);
+        
+        hold on
+        
+        errorbar(test_ranks, speedup_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1);
+        errorbar(test_ranks, speedup_orthrand,  neg_orthrand,  pos_orthrand,  '+-', 'Color', '#b482ba','markersize',6,'linewidth',1);
+        errorbar(test_ranks, speedup_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1);
+        errorbar(test_ranks, speedup_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1);
+        errorbar(test_ranks, speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1);
+        
+        hold off
+        % title("(b)")
+        xlabel('Target ranks', 'FontSize', 18)
+        ylabel('Speedup', 'FontSize', 18)
+        % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
+        set(gca,'FontSize',14,"FontName", "Times New Roman")
+        axis square;
 end
