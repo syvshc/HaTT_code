@@ -32,7 +32,7 @@ for i = 1 : 5 - 1
 end
 
 % ranks to test every 5
-test_ranks = 5:5:60;
+test_ranks = 30:10:120;
 
 %% init matrix of errors and matrix of times
 
@@ -47,20 +47,22 @@ test_ranks = 5:5:60;
 L = length(test_ranks);
 errors_HaTT = zeros(L, S);
 errors_HaTT_no_svd = zeros(L, S);
-errors_TTrounding = zeros(L, S);
-errors_randorth = zeros(L, S);
-errors_orthrand = zeros(L, S);
+% errors_TTrounding = zeros(L, S);
+% errors_randorth = zeros(L, S);
+% errors_orthrand = zeros(L, S);
 
 time_HaTT = zeros(L, S);
 time_HaTT_no_svd = zeros(L, S);
-time_TTrounding = zeros(L, S);
-time_randorth = zeros(L, S);
-time_orthrand = zeros(L, S);
+time_HPCRL = zeros(L, S);
+time_HPCRL_no_svd = zeros(L, S);
+% time_TTrounding = zeros(L, S);
+% time_randorth = zeros(L, S);
+% time_orthrand = zeros(L, S);
 
 %% Real result of the tensor
 % TT rank of tt is 25, we use Frobenius norm to calculate the error
 % the norm function is from the TT-Toolbox: norm.m
-tt = 5 * tmp_y .* (5 * tmp_z);
+tt = (5*tmp_y) .* (5*tmp_z);
 
 %% Test the algorithms
 
@@ -68,33 +70,33 @@ for i = 1 : L
   ell = test_ranks(i);
   for j = 1 : S
     HaTT = tic;
-    x = hadamard_round_randorth(y, z, ell);
+    [x, time_HPCRL(i, j)] = hadamard_round_randorth(y, z, ell);
     time_HaTT(i, j) = toc(HaTT);
     errors_HaTT(i, j) = norm(tt - x) / norm(tt);
 
     HaTT_no_svd = tic;
-    x = hadamard_round_randorth_without_svd(y, z, ell);
+    [x, time_HPCRL_no_svd(i, j)] = hadamard_round_randorth_without_svd(y, z, ell);
     time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
     errors_HaTT_no_svd(i, j) = norm(tt - x) / norm(tt);
 
-    TTrounding = tic;
-    x = round(y .* z, 1e-5, ell);
-    time_TTrounding(i, j) = toc(TTrounding);
-    errors_TTrounding(i, j) = norm(tt - x) / norm(tt);
-    
-    randorth = tic;
-    x = round_randorth(y .* z, ell);
-    time_randorth(i, j) = toc(randorth);
-    errors_randorth(i, j) = norm(tt - x) / norm(tt);
-    
-    orthrand = tic;
-    x = round_orthrand(y .* z, ell);
-    time_orthrand(i, j) = toc(orthrand);
-    errors_orthrand(i, j) = norm(tt - x) / norm(tt);
+    % TTrounding = tic;
+    % x = round(y .* z, 1e-5, ell);
+    % time_TTrounding(i, j) = toc(TTrounding);
+    % errors_TTrounding(i, j) = norm(tt - x) / norm(tt);
+    % 
+    % randorth = tic;
+    % x = round_randorth(y .* z, ell);
+    % time_randorth(i, j) = toc(randorth);
+    % errors_randorth(i, j) = norm(tt - x) / norm(tt);
+    % 
+    % orthrand = tic;
+    % x = round_orthrand(y .* z, ell);
+    % time_orthrand(i, j) = toc(orthrand);
+    % errors_orthrand(i, j) = norm(tt - x) / norm(tt);
   end
 end
 
 %% save data for reusing and plot result
-% save("randtest.mat");
+save("randtest.mat");
 
-PlotResult("randtest.mat")
+% PlotResult("randtest.mat")
