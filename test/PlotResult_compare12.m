@@ -1,4 +1,4 @@
-function f = PlotResult_randtest(varargin)
+function f = PlotResult_compare12(varargin)
   if nargin == 1
     file = varargin{1};
     name = 'randtest';
@@ -15,8 +15,8 @@ function f = PlotResult_randtest(varargin)
   f.Position = [1,49,1440,781.5];
   % Post-process errors
   
-  [err_HaTT, neg_HaTT, pos_HaTT] = computeError(errors_HaTT);
-  [err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeError(errors_HaTT_no_svd);
+  [err_HaTT1, neg_HaTT1, pos_HaTT1] = computeError(errors_HaTT1);
+  [err_HaTT2, neg_HaTT2, pos_HaTT2] = computeError(errors_HaTT2);
 
   subplot(1, 2, 1)
 
@@ -26,8 +26,8 @@ function f = PlotResult_randtest(varargin)
   ax = gca;
   ax.YScale = 'log';
   
-  errorbar(test_ranks, err_HaTT, neg_HaTT, pos_HaTT,     'ks','markersize',6,'linewidth',1.5)
-  errorbar(test_ranks, err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x', 'Color', '#c45c30','markersize',6,'linewidth',1.5)
+  errorbar(test_ranks, err_HaTT1, neg_HaTT1, pos_HaTT1,     'ks','markersize',6,'linewidth',1.5)
+  errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','markersize',6,'linewidth',1.5)
   
   hold off
   
@@ -41,15 +41,15 @@ function f = PlotResult_randtest(varargin)
 
   % Post-process timings
 
-  [times_HaTT, neg_HaTT, pos_HaTT] = computeTime(time_HaTT);
-  [times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeTime(time_HaTT_no_svd);
+  [times_HaTT1, neg_HaTT1, pos_HaTT1] = computeTime(time_HaTT1);
+  [times_HaTT2, neg_HaTT2, pos_HaTT2] = computeTime(time_HaTT2);
 
   subplot(1, 2, 2)
 
   hold on
 
-  errorbar(test_ranks, times_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1.5);
-  errorbar(test_ranks, times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
+  errorbar(test_ranks, times_HaTT1,       neg_HaTT1,       pos_HaTT1,       'ks-','markersize',6,'linewidth',1.5);
+  errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
   
   hold off
   % title("(c)")

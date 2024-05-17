@@ -9,20 +9,20 @@ for fun_num = 1:2
   else
     t = linspace(-2.5*pi, 2.5*pi, 10);
   end
-  errors_HaTT = zeros(L, S);
-  errors_HaTT_no_svd = zeros(L, S);
+  errors_HaTT1 = zeros(L, S);
+  errors_HaTT2 = zeros(L, S);
   errors_TTrounding = zeros(L, S);
   errors_randorth = zeros(L, S);
   errors_orthrand = zeros(L, S);
   errors_twosided = zeros(L, S);
   
-  time_HaTT = zeros(L, S);
-  time_HPCRL = zeros(L, S);
-  time_HBilinearForm = zeros(L, S);
+  time_HaTT1 = zeros(L, S);
+  time_HPCRL1 = zeros(L, S);
+  time_HBF1 = zeros(L, S);
   
-  time_HaTT_no_svd = zeros(L, S);
-  time_HPCRL_no_svd = zeros(L, S);
-  time_HBilinearForm_no_svd = zeros(L, S);
+  time_HaTT2 = zeros(L, S);
+  time_HPCRL2 = zeros(L, S);
+  time_HBF2 = zeros(L, S);
   
   time_TTrounding = zeros(L, S);
   
@@ -54,26 +54,26 @@ for fun_num = 1:2
     for j = 1:S
       HaTT = tic;
       for iter = 1:iter_num
-        [x, time_HPCRL(i, j)] = hadamard_round_randorth(A, x, ell);
+        [x, time_HPCRL1(i, j)] = HaTT1(A, x, ell);
         x = x/norm(x);
       end
       HBF = tic;
-      M_svd = HBilinearForm(A, x);
-      time_HBilinearForm(i, j) = toc(HBF);
-      time_HaTT(i, j) = toc(HaTT);
-      errors_HaTT(i, j) = abs(M_svd - act_M)/act_M ;
+      M_svd = HBF1(A, x);
+      time_HBF1(i, j) = toc(HBF);
+      time_HaTT1(i, j) = toc(HaTT);
+      errors_HaTT1(i, j) = abs(M_svd - act_M)/act_M ;
   
       x = x1;
       HaTT_no_svd = tic;
       for iter = 1:iter_num
-        [x, time_HPCRL_no_svd(i, j)] = hadamard_round_randorth_without_svd(A, x, ell);
+        [x, time_HPCRL2(i, j)] = HaTT2(A, x, ell);
         x = x/norm(x);
       end
       HBF_no_svd = tic;
-      M_no_svd = HBilinearForm_without_svd(A, x);
-      time_HBilinearForm_no_svd(i, j) = toc(HBF_no_svd);
-      time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
-      errors_HaTT_no_svd(i, j) = abs(M_no_svd - act_M)/act_M;
+      M_no_svd = HBF2(A, x);
+      time_HBF2(i, j) = toc(HBF_no_svd);
+      time_HaTT2(i, j) = toc(HaTT_no_svd);
+      errors_HaTT2(i, j) = abs(M_no_svd - act_M)/act_M;
   
       x = x1;
       randorth = tic;

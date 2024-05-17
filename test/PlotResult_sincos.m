@@ -18,8 +18,8 @@ function f = PlotResult_sincos(varargin)
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
     [err_randorth, neg_randorth, pos_randorth] = computeError(errors_randorth);
     [err_orthrand, neg_orthrand, pos_orthrand] = computeError(errors_orthrand);
-    [err_HaTT, neg_HaTT, pos_HaTT] = computeError(errors_HaTT);
-    [err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeError(errors_HaTT_no_svd);
+    [err_HaTT1, neg_HaTT1, pos_HaTT1] = computeError(errors_HaTT1);
+    [err_HaTT2, neg_HaTT2, pos_HaTT2] = computeError(errors_HaTT2);
     [err_twosided, neg_twosided, pos_twosided] = computeError(errors_twosided);
 
     subplot(1, 3, 1)
@@ -34,8 +34,8 @@ function f = PlotResult_sincos(varargin)
     errorbar(test_ranks, err_randorth, neg_randorth, pos_randorth, '^', 'Color', '#23a6ba','markersize',6,'linewidth',1.5)
     errorbar(test_ranks, err_orthrand, neg_orthrand, pos_orthrand, '+', 'Color', '#b482ba','markersize',6,'linewidth',1.5)
     errorbar(test_ranks, err_twosided, neg_twosided, pos_twosided, '*', 'Color', '#c48f00','markersize',6,'linewidth',1.5)
-    errorbar(test_ranks, err_HaTT, neg_HaTT, pos_HaTT,     'ks','markersize',6,'linewidth',1.5)
-    errorbar(test_ranks, err_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x', 'Color', '#c45c30','markersize',6,'linewidth',1.5)
+    errorbar(test_ranks, err_HaTT1, neg_HaTT1, pos_HaTT1,     'ks','markersize',6,'linewidth',1.5)
+    errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','markersize',6,'linewidth',1.5)
     
     hold off
     
@@ -52,8 +52,8 @@ function f = PlotResult_sincos(varargin)
     [times_randorth, neg_randorth, pos_randorth] = computeTime(time_randorth);
     [times_orthrand, neg_orthrand, pos_orthrand] = computeTime(time_orthrand);
     [times_twosided, neg_twosided, pos_twosided] = computeTime(time_twosided);
-    [times_HaTT, neg_HaTT, pos_HaTT] = computeTime(time_HaTT);
-    [times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeTime(time_HaTT_no_svd);
+    [times_HaTT1, neg_HaTT1, pos_HaTT1] = computeTime(time_HaTT1);
+    [times_HaTT2, neg_HaTT2, pos_HaTT2] = computeTime(time_HaTT2);
 
     subplot(1, 3, 2)
 
@@ -64,8 +64,8 @@ function f = PlotResult_sincos(varargin)
     errorbar(test_ranks, times_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1.5);
     errorbar(test_ranks, times_orthrand,  neg_orthrand,  pos_orthrand,  '+-', 'Color', '#b482ba','markersize',6,'linewidth',1.5);
     errorbar(test_ranks, times_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1.5);
-    errorbar(test_ranks, times_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1.5);
-    errorbar(test_ranks, times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
+    errorbar(test_ranks, times_HaTT1,       neg_HaTT1,       pos_HaTT1,       'ks-','markersize',6,'linewidth',1.5);
+    errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
     % title("(c)")
@@ -77,8 +77,8 @@ function f = PlotResult_sincos(varargin)
 
         % Post-process timings
     
-        [speedup_HaTT, neg_HaTT, pos_HaTT] = computeSpeedup(time_HaTT, time_TTrounding);
-        [speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd] = computeSpeedup(time_HaTT_no_svd, time_TTrounding);
+        [speedup_HaTT1, neg_HaTT1, pos_HaTT1] = computeSpeedup(time_HaTT1, time_TTrounding);
+        [speedup_HaTT2, neg_HaTT2, pos_HaTT2] = computeSpeedup(time_HaTT2, time_TTrounding);
         [speedup_TTrounding, neg_TTrounding, pos_TTrounding] = computeSpeedup(time_TTrounding, time_TTrounding);
         [speedup_randorth, neg_randorth, pos_randorth] = computeSpeedup(time_randorth, time_TTrounding);
         [speedup_orthrand, neg_orthrand, pos_orthrand] = computeSpeedup(time_orthrand, time_TTrounding);
@@ -93,8 +93,8 @@ function f = PlotResult_sincos(varargin)
         errorbar(test_ranks, speedup_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1.5);
         errorbar(test_ranks, speedup_orthrand,  neg_orthrand,  pos_orthrand,  '+-', 'Color', '#b482ba','markersize',6,'linewidth',1.5);
         errorbar(test_ranks, speedup_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1.5);
-        errorbar(test_ranks, speedup_HaTT,       neg_HaTT,       pos_HaTT,       'ks-','markersize',6,'linewidth',1.5);
-        errorbar(test_ranks, speedup_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
+        errorbar(test_ranks, speedup_HaTT1,       neg_HaTT1,       pos_HaTT1,       'ks-','markersize',6,'linewidth',1.5);
+        errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
         
         hold off
         % title("(b)")

@@ -33,7 +33,7 @@ for k = 1 : 7
   end
   hadamard = tic;
   try
-    hadamard_round_randorth(TTA, TTB, l);
+    HaTT1(TTA, TTB, l);
     time_hadamard(k) = toc(hadamard);
   catch
     time_hadamard(k) = inf;

@@ -4,6 +4,6 @@ function [error, neg, pos] = computeError(errors)
   errors = sort(errors, 2);
   errors = errors(:,2:end-1);
   error = squeeze(mean(errors, 2));
-  neg = error -  squeeze(min(errors,[],2));
-  pos = squeeze(max(errors,[],2)) - error;
+  neg = squeeze(std(errors,[],2));
+  pos = squeeze(std(errors,[],2));
 end

@@ -29,28 +29,28 @@ ell = 60;
 %% init matrix of errors and matrix of times
 
 % we'll use the following functions to round A:
-% 3. round (TTrounding)
-% 4. round_randorth (randorth)
-% 5. round_orthrand (orthrand)
-% 6. round_twosided (twosided)
-% 1. hadamard_round_randorth (HaTT)
-% 2. hadamard_round_randorth_without_svd (HaTT_no_svd)
-% 1 and 2 are algorithms we formulated, 3 is from Oseledets (2011) and 4 and 5 are from Daas (2023)
+% 1. round (TTrounding)
+% 2. round_randorth (randorth)
+% 3. round_orthrand (orthrand)
+% 4. round_twosided (twosided)
+% 5. HaTT1 (HaTT)
+% 6. HaTT2 (HaTT_no_svd)
+% 5 and 6 are algorithms we formulated, 1 is from Oseledets (2011) and 2, 3 and 4 are from Daas (2023)
 
 L = length(test_ranks);
-errors_HaTT = zeros(L, S);
-errors_HaTT_no_svd = zeros(L, S);
+errors_HaTT1 = zeros(L, S);
+errors_HaTT2 = zeros(L, S);
 errors_TTrounding = zeros(L, S);
 errors_randorth = zeros(L, S);
 errors_orthrand = zeros(L, S);
 errors_twosided = zeros(L, S);
-time_HaTT = zeros(L, S);
-time_HaTT_no_svd = zeros(L, S);
+time_HaTT1 = zeros(L, S);
+time_HaTT2 = zeros(L, S);
 time_TTrounding = zeros(L, S);
 time_randorth = zeros(L, S);
 time_orthrand = zeros(L, S);
-time_HPCRL = zeros(L, S);
-time_HPCRL_no_svd = zeros(L, S);
+time_HPCRL1 = zeros(L, S);
+time_HPCRL2 = zeros(L, S);
 time_PCRL = zeros(L, S);
 time_HMcore0 = zeros(L, S);
 time_HMcore0_no_svd = zeros(L, S);
@@ -101,39 +101,39 @@ for i = 1 : L
 
     try
       HaTT = tic;
-      [x, time_HPCRL(i, j), time_HMcore0(i, j)] = hadamard_round_randorth(y, z, ell);
-      time_HaTT(i, j) = toc(HaTT);
+      [x, time_HPCRL1(i, j), time_HMcore0(i, j)] = HaTT1(y, z, ell);
+      time_HaTT1(i, j) = toc(HaTT);
     catch
-      time_HaTT(i, j) = inf;
+      time_HaTT1(i, j) = inf;
       x = [0; 1; 1];
     end
     try
-      errors_HaTT(i, j) = norm(tt - x) / normtt;
+      errors_HaTT1(i, j) = norm(tt - x) / normtt;
     catch
       try
         X = full(x);
-        errors_HaTT(i, j) = norm(TT-X) / normTT;
+        errors_HaTT1(i, j) = norm(TT-X) / normTT;
       catch
-        errors_HaTT(i, j) = inf;
+        errors_HaTT1(i, j) = inf;
       end
     end
 
     try
       HaTT_no_svd = tic;
-      [x, time_HPCRL_no_svd(i, j), time_HMcore0_no_svd(i, j)] = hadamard_round_randorth_without_svd(y, z, ell);
-      time_HaTT_no_svd(i, j) = toc(HaTT_no_svd);
+      [x, time_HPCRL2(i, j), time_HMcore0_no_svd(i, j)] = HaTT2(y, z, ell);
+      time_HaTT2(i, j) = toc(HaTT_no_svd);
     catch
-      time_HaTT_no_svd(i, j) = inf;
+      time_HaTT2(i, j) = inf;
       x = [0; 1; 1];
     end
     try
-      errors_HaTT_no_svd(i, j) = norm(tt - x) / normtt;
+      errors_HaTT2(i, j) = norm(tt - x) / normtt;
     catch
       try
         X = full(x);
-        errors_HaTT_no_svd(i, j) = norm(TT-X) / normTT;
+        errors_HaTT2(i, j) = norm(TT-X) / normTT;
       catch
-        errors_HaTT_no_svd(i, j) = inf;
+        errors_HaTT2(i, j) = inf;
       end
     end
     

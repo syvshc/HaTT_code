@@ -1,4 +1,4 @@
-function [varargout] = hadamard_round_randorth_without_svd(Y, Z, varargin)
+function [varargout] = HaTT2(Y, Z, varargin)
 % HADMARD_ROUND  Round the Hadamard product of two TT-tensor with RandOrth
 % Y and Z are TT-tensors of the same physics modes,
 % If the target TT-rank is not given, we'll use the size of each unfolding of Y as the default target TT-rank.
@@ -44,8 +44,8 @@ function [varargout] = hadamard_round_randorth_without_svd(Y, Z, varargin)
   time_HMcore0_no_svd = 0;
   % generate the sketch phase
   HPCRL_no_svd = tic;
-  W = hadamard_PartialContractionsRL_without_svd(Y, Z, R);
-  time_HPCRL_no_svd = toc(HPCRL_no_svd);
+  W = HPCRL2(Y, Z, R);
+  time_HPCRL2 = toc(HPCRL_no_svd);
   cr_w = W.core; ps_w = W.ps;
   % init ps and core of X
   ps_x = cumsum([1; n(1 : end) .* l(1 : end - 1) .* l(2 : end)]);
@@ -124,12 +124,12 @@ function [varargout] = hadamard_round_randorth_without_svd(Y, Z, varargin)
   switch nargout
     case 3
       varargout{1} = X;
-      varargout{2} = time_HPCRL_no_svd;
+      varargout{2} = time_HPCRL2;
       varargout{3} = time_HMcore0_no_svd;
         
     case 2 
       varargout{1} = X;
-      varargout{2} = time_HPCRL_no_svd;
+      varargout{2} = time_HPCRL2;
     case 1
       varargout{1} = X;  
       
