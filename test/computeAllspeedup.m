@@ -4,6 +4,7 @@ function [SU1, SU2] = computeAllspeedup(file)
   % len = size(time_HaTT1, 1);
   % SU1 = zeros(len, 3);
   % SU2 = zeros(len, 3);
+  [speedup_TTrounding, ~, ~] = computeSpeedup(time_HaTT1, time_TTrounding);
   [speedup_randorth, ~, ~] = computeSpeedup(time_HaTT1, time_randorth);
   [speedup_orthrand, ~, ~] = computeSpeedup(time_HaTT1, time_orthrand);
   [speedup_twosided, ~, ~] = computeSpeedup(time_HaTT1, time_twosided);
@@ -14,10 +15,11 @@ function [SU1, SU2] = computeAllspeedup(file)
   % [time_twosided, ~, ~] = computeTime(time_twosided);
   % [time_TTrounding, ~, ~] = computeTime(time_TTrounding);
   % TIME1 = [time_HaTT1, time_HaTT2, time_randorth, time_orthrand, time_twosided, time_TTrounding];
-  SU1 = [speedup_randorth, speedup_orthrand, speedup_twosided];
+  SU1 = [speedup_TTrounding, speedup_randorth, speedup_orthrand, speedup_twosided];
 
+  [speedup_TTrounding, ~, ~] = computeSpeedup(time_HaTT2, time_TTrounding);
   [speedup_randorth, ~, ~] = computeSpeedup(time_HaTT2, time_randorth);
   [speedup_orthrand, ~, ~] = computeSpeedup(time_HaTT2, time_orthrand);
   [speedup_twosided, ~, ~] = computeSpeedup(time_HaTT2, time_twosided);
-  SU2 = [speedup_randorth, speedup_orthrand, speedup_twosided];
+  SU2 = [speedup_TTrounding, speedup_randorth, speedup_orthrand, speedup_twosided];
 end

@@ -12,7 +12,7 @@ function f = PlotResult_compare12(varargin)
   f = figure('Name', name);
   % f.Position(1:2) = [0,1050];
   % f.Position(3:4) = [1050, 700];
-  f.Position = [1,49,1440,781.5];
+  f.Position = [1,49,1536,741.6];
   % Post-process errors
   
   [err_HaTT1, neg_HaTT1, pos_HaTT1] = computeError(errors_HaTT1);
@@ -31,11 +31,12 @@ function f = PlotResult_compare12(varargin)
   
   hold off
   
-  % title('(a)')
-  xlabel('Target ranks', 'FontSize', 24)
-  ylabel('Relative Error', 'FontSize', 24)
-  legend('HaTT-1', 'HaTT-2')
-  set(gca,'FontSize',14,"FontName", "Times New Roman")
+  title('(a)')
+  set(gca,'FontSize',14.625,"FontName", "Times New Roman")
+  xlabel('Target ranks', 'FontSize', 21.375)
+  ylabel('Relative Error (\times 10^{-15})', 'FontSize', 21.375)
+  xlim([25, 125])
+  legend('HaTT-1', 'HaTT-2', 'Location','southeast')
   box on
   axis square;
 
@@ -52,11 +53,12 @@ function f = PlotResult_compare12(varargin)
   errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
   
   hold off
-  % title("(c)")
-  xlabel('Target ranks', 'FontSize', 24)
-  ylabel('Time (s)', 'FontSize', 24)
+  title("(b)")
+  set(gca,'FontSize',14.625,"FontName", "Times New Roman")
+  xlabel('Target ranks', 'FontSize', 21.375)
+  ylabel('Time (s)', 'FontSize', 21.375)
+  xlim([25, 125])
   % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-  set(gca,'FontSize',14,"FontName", "Times New Roman")
   box on
   axis square;
 end

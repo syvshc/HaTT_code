@@ -44,9 +44,10 @@ function W = HPCRL1(X, Y, Z, varargin)
     [U, S, V] = svd(W0, 'econ');
     ep = max(size(S))*eps(norm(S));
     if nargin == 1
-      trunc = varargin{1};
+      trunc = max(varargin{1}, size(S, 1));
     else
       trunc = nnz(diag(S)>ep);
+      % trunc = size(S, 1);
     end
     U = U(:, 1:trunc);
     S = S(1:trunc, 1:trunc);

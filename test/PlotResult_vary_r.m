@@ -12,7 +12,7 @@ function f = PlotResult_vary_r(varargin)
     f = figure('Name', name);
     % f.Position(1:2) = [0,1050];
     % f.Position(3:4) = [1050, 700];
-    f.Position = [1,49,1440,781.5];
+    f.Position = [1,49,1536,741.6];
     % Post-process errors
     
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
@@ -38,11 +38,12 @@ function f = PlotResult_vary_r(varargin)
     
     hold off
     
-    % title('(a)')
-    xlabel('TT ranks', 'FontSize', 18)
-    ylabel('Relative Error', 'FontSize', 18)
-    legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
+    title('(a)')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
+    xlabel('TT ranks', 'FontSize', 18)
+    ylabel('Relative Error (\times 10^{-5})', 'FontSize', 18)
+    xlim([55, 155])
+    legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
     axis square;
 
     % Post-process timings
@@ -67,17 +68,18 @@ function f = PlotResult_vary_r(varargin)
     errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("(c)")
+    title("(b)")
+    set(gca,'FontSize',14,"FontName", "Times New Roman", 'YScale','log')
     xlabel('TT ranks', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
+    xlim([55, 155])
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-    set(gca,'FontSize',14,"FontName", "Times New Roman", 'YScale','log')
     axis square;
 
         
     % Post-process timings
     
-    [speedup_TTrounding, neg_TTrounding, pos_TTrounding] = computeSpeedup(time_TTrounding, time_TTrounding);
+    [speedup_TTrounding, ~, ~] = computeSpeedup(time_TTrounding, time_TTrounding);
     [speedup_randorth, neg_randorth, pos_randorth] = computeSpeedup(time_randorth, time_TTrounding);
     [speedup_orthrand, neg_orthrand, pos_orthrand] = computeSpeedup(time_orthrand, time_TTrounding);
     [speedup_twosided, neg_twosided, pos_twosided] = computeSpeedup(time_twosided, time_TTrounding);
@@ -87,7 +89,9 @@ function f = PlotResult_vary_r(varargin)
     subplot(1, 3, 3)
     
     errorbar(test_ranks, speedup_TTrounding,       zeros(length(test_ranks), 1),       zeros(length(test_ranks), 1),       'o-', 'Color', '#3570b6','markersize',6,'linewidth',1.5);
-    
+    ax = gca;
+    ax.YScale = 'log';
+    ax.XScale = 'log';
     hold on
     
     errorbar(test_ranks, speedup_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1.5);
@@ -95,13 +99,25 @@ function f = PlotResult_vary_r(varargin)
     errorbar(test_ranks, speedup_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1.5);
     errorbar(test_ranks, speedup_HaTT1,       neg_HaTT1,       pos_HaTT1,       'ks-','markersize',6,'linewidth',1.5);
     errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
-    
+    % x = 60:10:110;
+    % y4 = x.^4/(60^4/speedup_HaTT1(1));
+    % y3 = x.^3/(60^3/speedup_HaTT1(1));
+    % y2 = x.^2/(60^2/speedup_HaTT1(1));
+    % y1 = x/(60/speedup_HaTT1(1));
+    % % f4 = loglog(x, y4, '--', 'linewidth',1.5);
+    % f3 = loglog(x, y3, '--', 'linewidth',1.5);
+    % f2 = loglog(x, y2, '--');
+    % f1 = loglog(x, y1, '--', 'linewidth', 1.5);
+    % % legend([f1, f3], ["linear", "cubic"])
+    % legend([f1, f2, f3], ["linear", "quadratic", "cubic"])
     hold off
-    % title("(b)")
+    title("(c)")
+    set(gca,'FontSize',14,"FontName", "Times New Roman")
     xlabel('TT ranks', 'FontSize', 18)
     ylabel('Speedup', 'FontSize', 18)
+    xlim([58, 112])
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-    set(gca,'FontSize',14,"FontName", "Times New Roman")
+
     axis square;
 
 

@@ -12,7 +12,7 @@ function f = PlotResult_find_largest(varargin)
     f = figure('Name', name);
     % f.Position(1:2) = [0,1050];
     % f.Position(3:4) = [1050, 700];
-    f.Position = [1,49,1440,781.5];
+    f.Position = [1,49,1536,741.6];
     % Post-process errors
     
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
@@ -38,11 +38,12 @@ function f = PlotResult_find_largest(varargin)
     
     hold off
     
-    % title('Alpine-(a)')
+    title('(a)')
+    set(gca,'FontSize',14,"FontName", "Times New Roman")
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Relative Error', 'FontSize', 18)
+    xlim([8, 52])
     legend({'TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2'}, 'FontSize', 12, 'Location','southeast')
-    set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
 
     % Post-process timings
@@ -67,11 +68,12 @@ function f = PlotResult_find_largest(varargin)
     errorbar(D_set, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("Alpine-(c)")
+    title("(b)")
+    set(gca,'FontSize',14,"FontName", "Times New Roman")
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
+    xlim([8, 52])
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-    set(gca,'FontSize',14,"FontName", "Times New Roman", 'YScale','log')
     axis square;
 
         
@@ -97,11 +99,12 @@ function f = PlotResult_find_largest(varargin)
     errorbar(D_set, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("Alpine-(b)")
+    title("(c)")
+    set(gca,'FontSize',14,"FontName", "Times New Roman")
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Speedup', 'FontSize', 18)
+    xlim([8, 52])
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-    set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
 
     % % Post-process partical contraction timings

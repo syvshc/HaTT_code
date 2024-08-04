@@ -12,7 +12,7 @@ function f = PlotResult_sincos(varargin)
     f = figure('Name', name);
     % f.Position(1:2) = [0,1050];
     % f.Position(3:4) = [1050, 700];
-    f.Position = [1,49,1440,781.5];
+    f.Position = [1,49,1536,741.6];
     % Post-process errors
     
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
@@ -39,11 +39,12 @@ function f = PlotResult_sincos(varargin)
     
     hold off
     
-    % title('(a)')
-    xlabel('Target ranks', 'FontSize', 18)
-    ylabel('Relative Error', 'FontSize', 18)
-    legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
+    title('(a)')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
+    xlabel('Target rank', 'FontSize', 18)
+    ylabel('Relative Error', 'FontSize', 18)
+    xlim([0 64])
+    legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
     axis square;
 
     % Post-process timings
@@ -68,11 +69,12 @@ function f = PlotResult_sincos(varargin)
     errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("(c)")
-    xlabel('Target ranks', 'FontSize', 18)
-    ylabel('Time (s)', 'FontSize', 18)
-    % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
+    title("(b)")
     set(gca,'FontSize',14,"FontName", "Times New Roman")
+    xlabel('Target rank', 'FontSize', 18)
+    ylabel('Time (s)', 'FontSize', 18)
+    xlim([0 64])
+    % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
     axis square;
 
         % Post-process timings
@@ -97,10 +99,11 @@ function f = PlotResult_sincos(varargin)
         errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
         
         hold off
-        % title("(b)")
-        xlabel('Target ranks', 'FontSize', 18)
-        ylabel('Speedup', 'FontSize', 18)
-        % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
+        title("(c)")
         set(gca,'FontSize',14,"FontName", "Times New Roman")
+        xlabel('Target rank', 'FontSize', 18)
+        ylabel('Speedup', 'FontSize', 18)
+        xlim([0 64])
+        % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
         axis square;
 end
