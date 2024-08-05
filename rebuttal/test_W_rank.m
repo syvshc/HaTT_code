@@ -36,7 +36,7 @@ for i = 1 : L
     for k = 1 : d - 1
       W1 = W_trunc.core(W_trunc.ps(k) : W_trunc.ps(k + 1) - 1);
       W1 = reshape(W1, [], l(k + 1));
-      if k == 4
+      if k == 2
           [U, S, V] = svd(W1, 'econ'); 
           subplot(1, 3, i);
           axis square;
