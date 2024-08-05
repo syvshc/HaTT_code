@@ -30,7 +30,7 @@ errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','m
 
 hold off
 
-title('(a) n = 15')
+title('(1a) $n = 15$','interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Relative Error (\times 10^{-5})', 'FontSize', 18)
@@ -73,7 +73,7 @@ errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c3
 % % legend([f1, f3], ["linear", "cubic"])
 % legend([f1, f2, f3], ["linear", "quadratic", "cubic"])
 hold off
-title("(b) n=15")
+title("(1b) $n=15$",'interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Speedup', 'FontSize', 18)
@@ -109,7 +109,7 @@ errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','m
 
 hold off
 
-title('(a)')
+title('(2a) $n = 20$','interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Relative Error (\times 10^{-5})', 'FontSize', 18)
@@ -152,7 +152,7 @@ errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c3
 % % legend([f1, f3], ["linear", "cubic"])
 % legend([f1, f2, f3], ["linear", "quadratic", "cubic"])
 hold off
-title("(c)")
+title("(2b) $n=20$",'interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Speedup', 'FontSize', 18)

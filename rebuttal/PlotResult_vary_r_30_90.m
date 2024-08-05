@@ -30,12 +30,12 @@ errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','m
 
 hold off
 
-title('(a) l = 30, relative error')
+title('(1a) $\ell = 30$','interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
-ylabel('Relative Error (\times 10^{-5})', 'FontSize', 18)
+ylabel('Relative Error', 'FontSize', 18)
 xlim([55, 155])
-legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
+legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'FontSize', 10)
 axis square;
 
 % Post-process timings
@@ -72,7 +72,7 @@ errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c3
 % % legend([f1, f3], ["linear", "cubic"])
 % legend([f1, f2, f3], ["linear", "quadratic", "cubic"])
 hold off
-title("(b) l = 30, speedups")
+title("(1b) $\ell = 30$",'interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Speedup', 'FontSize', 18)
@@ -110,10 +110,10 @@ errorbar(test_ranks, err_HaTT2, neg_HaTT2, pos_HaTT2, 'x', 'Color', '#c45c30','m
 
 hold off
 
-title('(a) l = 90, relative error')
+title('(2a) $\ell = 90$','interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
-ylabel('Relative Error (\times 10^{-5})', 'FontSize', 18)
+ylabel('Relative Error', 'FontSize', 18)
 xlim([55, 155])
 % legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
 axis square;
@@ -152,7 +152,7 @@ errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c3
 % % legend([f1, f3], ["linear", "cubic"])
 % legend([f1, f2, f3], ["linear", "quadratic", "cubic"])
 hold off
-title("(b) l = 90, speedups")
+title("(2b) $\ell = 90$",'interpreter','latex')
 set(gca,'FontSize',14,"FontName", "Times New Roman")
 xlabel('TT ranks', 'FontSize', 18)
 ylabel('Speedup', 'FontSize', 18)
