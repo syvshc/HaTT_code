@@ -23,7 +23,7 @@ test_ranks = 60:10:150;
 % but A's minimal rank is 5*5=25
 
 
-% we fix the target rank 50
+% we fix the target rank 60
 ell = 60;
 
 %% init matrix of errors and matrix of times
