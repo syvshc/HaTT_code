@@ -1,5 +1,6 @@
-function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_energy)
+function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
   t0 = tic;
+  energy = 0; 
 %   time = 0;
   I = [1, 0; 0, 1];
   J = [0, 1; 0, 0];
@@ -150,8 +151,14 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
   % I = tt_ones(2, d);
   round_time = zeros(T/dt, 1);
   for t = 1:(T/dt)
-%       aa = reshape(full(phi), n, n, n);
-%       mesh(aa(:, :, n/2))
+    if bool_save
+      eval(['phi_hatt2_', num2str(t), '= reshape(full(phi), n, n, n);']);
+      if isfile("phi_hatt2.mat") == 1
+        eval(['save(''phi_hatt2.mat'', ''phi_hatt2_', num2str(t), ''', ''-append'')']);
+      else
+        eval(['save(''phi_hatt2.mat'', ''phi_hatt2_', num2str(t), ''')']);
+      end
+    end
       if t == 1
           phi_half = phi;
       else
@@ -221,7 +228,9 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
       E0(t + 1) = .5 * gamma * hx * dot(phi, L * phi);
     end
   end
-  energy = E0 + r;
+  if bool_energy  
+    energy = E0 + r;
+  end
   time = toc(t0);
   disp(enddisp)
 end
