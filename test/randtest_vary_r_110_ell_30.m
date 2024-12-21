@@ -33,8 +33,8 @@ ell = 30;
 % 2. round_randorth (randorth)
 % 3. round_orthrand (orthrand)
 % 4. round_twosided (twosided)
-% 5. HaTT1 (HaTT)
-% 6. HaTT2 (HaTT_no_svd)
+% 5. HaTT1
+% 6. HaTT2
 % 5 and 6 are algorithms we formulated, 1 is from Oseledets (2011) and 2, 3 and 4 are from Daas (2023)
 
 L = length(test_ranks);

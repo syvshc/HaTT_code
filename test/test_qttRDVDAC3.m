@@ -1,5 +1,5 @@
 clear
-d_set = 5:9;
+d_set = [8,9:3:21];
 
 %% setup and initialize
 % number of tests
@@ -33,33 +33,65 @@ energy_HaTT1 = cell(L, S);
 energy_HaTT2 = cell(L, S);
 
 bool_energy = 1;
+bool_save = 0;
 
 for i = 1 : L
   d = d_set(i);
   n = 2^d;
   hx = 2 * pi / n;
   xx = hx * ((1 : n)' - 0.5);
+  % generate the initial value (matrix form)
   try 
-    [X, Y, Z] = meshgrid(xx, xx, xx);
-    ori_phi = 0.2 * sin(X) .* sin(Y) .* sin(Z);
+    ori_phi_mat = zeros(n, n, n);
+    for X = 1:n
+        for Y = 1:n
+            for Z = 1:n
+                ori_phi_mat(X, Y, Z) = 0.2 * sin(xx(X)) .* sin(xx(Y)) .* sin(xx(Z));
+            end
+        end
+    end
     disp(['====d = ', num2str(d), ' is being tested.====']);
+      [time, phi_pcg, energy] = RDVDAC3(d, ori_phi_mat, bool_energy, bool_save);
+      time_pcg(i, :) = time;
+      energy_pcg{i} = energy;
+      phi_pcg = reshape(phi_pcg, 2 * ones(1, 3 * d));
+      phi_pcg = tt_tensor(phi_pcg);
   catch
-    disp(['!!!d = ', num2str(d), ' is too large.!!!']);
-    break;
+    disp(['!!!d = ', num2str(d), ' is too large for direct representation.!!!']);
+    phi_pcg = [0, 1];
   end
-  clearvars X Y Z xx;
-
-  [time, phi_pcg, energy] = RDVDAC3(d, ori_phi, bool_energy);
-  time_pcg(i, :) = time;
-  energy_pcg{i} = energy;
-  phi_pcg = reshape(phi_pcg, 2 * ones(1, 3 * d));
-  phi_pcg = tt_tensor(phi_pcg);
+  clearvars xx;
+  % generate the initial value (TT form)
+cores = cell(d, 1);
+cores{1}(:, 1) = sin(hx*[0.5;1.5]);
+cores{1}(:, 2) = cos(hx*[0.5;1.5]);
+for j = 2 : (d - 1)
+    cores{j}(:, 1, 1) = cos(2^(j-1)*hx*[0;1]);
+    cores{j}(:, 2, 2) = cores{j}(:, 1, 1);
+    cores{j}(:, 1, 2) = -sin(2^(j-1)*hx*[0;1]);
+    cores{j}(:, 2, 1) = -cores{j}(:, 1, 2);
+end
+cores{end}(:, 1) = cos(2^(d-1)*hx*[0;1]);
+cores{end}(:, 2) = sin(2^(d-1)*hx*[0;1]);
+tt = tt_tensor(cores);
+ori_phi_tt = tt_tensor;
+ori_phi_tt.core = [tt.core;tt.core;tt.core];
+ori_phi_tt.r = [tt.r;tt.r(2:end);tt.r(2:end)];
+ori_phi_tt.n = [tt.n;tt.n;tt.n];
+ori_phi_tt.d = length(ori_phi_tt.n);
+ori_phi_tt.ps = cumsum([1;ori_phi_tt.n.*ori_phi_tt.r(1:end - 1).*ori_phi_tt.r(2:end)]);
+ori_phi_tt = 0.2 * ori_phi_tt;
   try 
-    [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "TTrounding", bool_energy);
+    [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "TTrounding", bool_energy, bool_save);
     time_TTrounding(i, :) = time;
     round_time_TTrounding(i, :) = sum(round_time);
     energy_TTrounding{i} = energy;
-    errors_TTrounding(i, :) = norm(phi - phi_pcg) / norm(phi_pcg);
+      try
+        errors_TTrounding(i, :) = norm(phi - phi_pcg) / norm(phi_pcg);
+      catch
+        errors_TTrounding(i, j) = -1;
+      end
+%     errors_TTrounding(i, :) = norm(phi - phi_pcg) / norm(phi_pcg);
   catch
     time_TTrounding(i, :) = inf;
     round_time_TTrounding(i, :) = inf;
@@ -67,7 +99,7 @@ for i = 1 : L
   for j = 1:S
     disp(['S = ', num2str(j), ' is being tested.']);
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "randorth", bool_energy);
+      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "randorth", bool_energy, bool_save);
       time_randorth(i, j) = time;
       round_time_randorth(i, j) = sum(round_time);
       energy_randorth{i, j} = energy;
@@ -81,7 +113,7 @@ for i = 1 : L
       round_time_randorth(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "orthrand", bool_energy);
+      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "orthrand", bool_energy, bool_save);
       time_orthrand(i, j) = time;
       round_time_orthrand(i, j) = sum(round_time);
       energy_orthrand{i, j} = energy;
@@ -95,7 +127,7 @@ for i = 1 : L
       round_time_orthrand(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "twosided", bool_energy);
+      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "twosided", bool_energy, bool_save);
       time_twosided(i, j) = time;
       round_time_twosided(i, j) = sum(round_time);
       energy_twosided{i, j} = energy;
@@ -109,7 +141,7 @@ for i = 1 : L
       round_time_twosided(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "HaTT1", bool_energy);
+      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "HaTT1", bool_energy, bool_save);
       time_HaTT1(i, j) = time;
       round_time_HaTT1(i, j) = sum(round_time);
       energy_HaTT1{i, j} = energy;
@@ -123,7 +155,7 @@ for i = 1 : L
       round_time_HaTT1(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, "HaTT2", bool_energy);
+      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "HaTT2", bool_energy, bool_save);
       time_HaTT2(i, j) = time;
       round_time_HaTT2(i, j) = sum(round_time);
       energy_HaTT2{i, j} = energy;

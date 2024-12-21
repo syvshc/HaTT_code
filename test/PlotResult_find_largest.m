@@ -38,7 +38,7 @@ function f = PlotResult_find_largest(varargin)
     
     hold off
     
-    % title('Alpine-(a)')
+    title('(d)')
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Relative Error', 'FontSize', 18)
     legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'Location','southeast')
@@ -67,7 +67,7 @@ function f = PlotResult_find_largest(varargin)
     errorbar(D_set, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("Alpine-(c)")
+    title("(e)")
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
@@ -97,7 +97,7 @@ function f = PlotResult_find_largest(varargin)
     errorbar(D_set, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("Alpine-(b)")
+    title("(f)")
     xlabel('Dimension', 'FontSize', 18)
     ylabel('Speedup', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')

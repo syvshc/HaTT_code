@@ -30,5 +30,5 @@ for i = 1:5
   k = plot(NaN, 'k-', "LineWidth", 1.5);
   r = plot(NaN, 'r--', "LineWidth", 1.5);
 end
-  lgd = legend([k, r], {'PCG', 'HaTT2'}, 'FontSize',12);
+  lgd = legend([k, r], {'PCG', 'HaTT-1'}, 'FontSize',12);
   lgd.Layout.Tile = 6;

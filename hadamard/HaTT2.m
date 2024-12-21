@@ -1,9 +1,17 @@
-function [varargout] = HaTT2(Y, Z, varargin)
+function [varargout] = HaTT1(Y, Z, l, option)
 % HADMARD_ROUND  Round the Hadamard product of two TT-tensor with RandOrth
 % Y and Z are TT-tensors of the same physics modes,
 % If the target TT-rank is not given, we'll use the size of each unfolding of Y as the default target TT-rank.
 
-   % init X
+arguments
+  Y
+  Z
+  l 
+  option.trunc 
+  % option.l 
+end
+
+  % init X
   X = tt_tensor;
   if (~isa(Y, 'tt_tensor') || ~isa(Z, 'tt_tensor'))
     error('Y and Z should be TT-tensors');
@@ -11,7 +19,7 @@ function [varargout] = HaTT2(Y, Z, varargin)
   % test if Y and Z can be hadamard producted
   d_y = Y.d; d_z = Z.d;
   n_y = Y.n; n_z = Z.n;
-  if ((d_y ~= d_z) && (n_y ~= n_z))
+  if (any(d_y ~= d_z) && any(n_y ~= n_z))
     error('Y and Z should have the same dimensions and sizes');
   else
     d = d_y; 
@@ -20,33 +28,39 @@ function [varargout] = HaTT2(Y, Z, varargin)
   r_y = Y.r; r_z = Z.r;
   cr_y = Y.core; ps_y = Y.ps;
   cr_z = Z.core; ps_z = Z.ps;
+
+  % if isfield(option, 'l')
+  %     l = option.l
+  % else
+    % ell = zeros(d + 1, 1);
+    % ell(1) = 1; ell(end) = 1;
+    % for i = 1 : d - 1
+    %   L = prod(n(1 : i));
+    %   R = prod(n(i + 1 : end));
+    %   ell(i + 1) = min(L, R, l(i + 1));
+    % end
+  % end
+
   % if l is given, use it, otherwise, generate l
   % we generate l as the max rank of Y's each unfolding
-
-  if nargin == 3
-    l = varargin{1};
-  elseif nargin == 2
-    l = zeros(d + 1, 1);
-    l(1) = 1; l(end) = 1;
-    for i = 1 : d - 1
-      L = prod(n(1 : i));
-      R = prod(n(i + 1 : end));
-      l(i + 1) = min(L, R);
-    end
-  else
-    error("Invalid number of arguments.");
-  end
+  
   % generate a Gaussian tensor train format.
   R = TTrandn(n, l);
   % reset l to a d+1 length vector
   l = R.r;
   r_x = l;
-  time_HMcore0_no_svd = 0;
+  time_HMcore0 = 0;
   % generate the sketch phase
-  HPCRL_no_svd = tic;
-  W = HPCRL2(Y, Z, R);
-  time_HPCRL_no_svd = toc(HPCRL_no_svd);
+  HPCRL = tic;
+  if isfield(option, 'trunc')
+    W = HPCRL1(Y, Z, R, option.trunc);
+  else
+    W = HPCRL1(Y, Z, R);
+  end
+  % W = HPCRL1(Y, Z, R);
+  time_HPCRL = toc(HPCRL);
   cr_w = W.core; ps_w = W.ps;
+  % W2 = reshape(cr_w(ps_w(2):ps_w(3)-1), r_y(3)*r_z(3), l(3));
   % init ps and core of X
   ps_x = cumsum([1; n(1 : end) .* l(1 : end - 1) .* l(2 : end)]);
   cr_x = zeros(ps_x(end) - 1, 1);
@@ -99,7 +113,7 @@ function [varargout] = HaTT2(Y, Z, varargin)
     % core00 = reshape(core00, [r_y(k + 1) * r_z(k + 1), n(k + 1) * r_y(k + 2) * r_z(k + 2)]);
     % core00 = M * core00;
     % core00 = h2v(core00, n(k + 1));
-    HMcore0_no_svd = tic;
+    HMcore0 = tic;
     M_row = size(M, 1);
     core0 = zeros(M_row, n(k + 1), r_y(k + 2) * r_z(k + 2));
     for i = 1 : n(k + 1)
@@ -109,7 +123,7 @@ function [varargout] = HaTT2(Y, Z, varargin)
         core0(beta, i, :) = reshape(corez(:, :, i)' * M1 * corey(:, :, i), 1, []);
       end
     end
-    time_HMcore0_no_svd = time_HMcore0_no_svd + toc(HMcore0_no_svd);
+    time_HMcore0 = time_HMcore0 + toc(HMcore0);
     core0 = reshape(core0, M_row * n(k + 1), r_y(k + 2) * r_z(k + 2));
   end
   % put the last core into cr_x, and truncate useless elements in cr_x
@@ -124,12 +138,12 @@ function [varargout] = HaTT2(Y, Z, varargin)
   switch nargout
     case 3
       varargout{1} = X;
-      varargout{2} = time_HPCRL_no_svd;
-      varargout{3} = time_HMcore0_no_svd;
+      varargout{2} = time_HPCRL;
+      varargout{3} = time_HMcore0;
         
     case 2 
       varargout{1} = X;
-      varargout{2} = time_HPCRL_no_svd;
+      varargout{2} = time_HPCRL;
     case 1
       varargout{1} = X;  
       

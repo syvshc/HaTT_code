@@ -31,7 +31,7 @@ function f = PlotResult_randtest(varargin)
   
   hold off
   
-  % title('(a)')
+  title('(a)')
   xlabel('Target ranks', 'FontSize', 24)
   ylabel('Relative Error', 'FontSize', 24)
   legend('HaTT-1', 'HaTT-2')
@@ -52,7 +52,7 @@ function f = PlotResult_randtest(varargin)
   errorbar(test_ranks, times_HaTT_no_svd, neg_HaTT_no_svd, pos_HaTT_no_svd, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
   
   hold off
-  % title("(c)")
+  title("(c)")
   xlabel('Target ranks', 'FontSize', 24)
   ylabel('Time (s)', 'FontSize', 24)
   % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')

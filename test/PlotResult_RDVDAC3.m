@@ -16,8 +16,8 @@ function f = PlotResult_RDVDAC3(varargin)
     f.Position = [1,49,1440,781.5];
     % Post-process errors
 
-    errors_TTrounding = errors_TTrounding * ones(1, 7);
-    time_pcg = time_pcg * ones(1, 7);
+    % errors_TTrounding = errors_TTrounding * ones(1, 7);
+    % time_pcg = time_pcg * ones(1, 7);
     
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
     [err_randorth, neg_randorth, pos_randorth] = computeError(errors_randorth);

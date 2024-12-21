@@ -12,16 +12,24 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
   gamma = 1;
   beta = 1;
   ep = 0.1;
-
+  
   sz = 2 * ones(1, 3 * d);
-  ori_phi = reshape(ori_phi, sz);
+  if class(ori_phi) == "double"
+    ori_phi = reshape(ori_phi, sz);
+  end
   phi = tt_tensor(ori_phi);
 
   if bool_energy
     r = zeros(1, floor(T/dt) + 1);
     E0 = r;
-    II = reshape(ones(1, n ^ 3), sz);
-    II = tt_tensor(II);
+    % II = reshape(ones(1, n ^ 3), sz);
+    % II = tt_tensor(II);
+    II = tt_tensor;
+    II.core = ones(1, 2 * 3 * d);
+    II.r = ones(1, 3 * d + 1);
+    II.n = 2 * ones(1, 3 * d);
+    II.d = length(II.n);
+    II.ps = cumsum([1;II.n.*II.r(1:end - 1).*II.r(2:end)]);
   end
 
   cores_laplace = cell(d, 1);
@@ -173,37 +181,37 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
           E_half = round(phi_half .* phi_half, 1e-5);
           E_half = round(E_half .* phi_half, 1e-5); 
           round_time(t) = toc;
-          enddisp = "> TTrounding process ended";
+          enddisp = ['> d = ', num2str(d), 'TTrounding process ended'];
         case "randorth"
           tic;
           E_half = round_randorth(phi_half .* phi_half, test_rank);
           E_half = round_randorth(E_half .* phi_half, test_rank);
           round_time(t) = toc;
-          enddisp = "> randorth process ended";
+          enddisp = ['> d = ', num2str(d), 'randorth process ended'];
         case "orthrand"
           tic;
           E_half = round_orthrand(phi_half .* phi_half, test_rank);
           E_half = round_orthrand(E_half .* phi_half, test_rank);
           round_time(t) = toc;
-          enddisp = "> orthrand process ended";
+          enddisp = ['> d = ', num2str(d), 'orthrand process ended'];
         case "twosided"
           tic;
           E_half = round_twosided(phi_half .* phi_half, test_rank);
           E_half = round_twosided(E_half .* phi_half, test_rank);
           round_time(t) = toc;
-          enddisp = "> twosided process ended";
+          enddisp = ['> d = ', num2str(d), 'twosided process ended']";
         case "HaTT1"
           tic;
           E_half = HaTT1(phi_half, phi_half, test_rank);
           E_half = HaTT1(E_half, phi_half, test_rank);
           round_time(t) = toc;
-          enddisp = "> HaTT1 process ended";
+          enddisp = ['> d = ', num2str(d), 'HaTT1 process ended'];
         case "HaTT2"
           tic;
           E_half = HaTT2(phi_half, phi_half, test_rank);
           E_half = HaTT2(E_half, phi_half, test_rank);
           round_time(t) = toc;
-          enddisp = "> HaTT2 process ended";
+          enddisp = ['> d = ', num2str(d), 'HaTT2 process ended'];
       end
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
