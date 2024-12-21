@@ -16,8 +16,8 @@ function f = PlotResult_RDVDAC3(varargin)
     f.Position = [1,49,1440,781.5];
     % Post-process errors
 
-    errors_TTrounding = errors_TTrounding * ones(1, 7);
-    time_pcg = time_pcg * ones(1, 7);
+    % errors_TTrounding = errors_TTrounding * ones(1, 7);
+    % time_pcg = time_pcg * ones(1, 7);
     
     [err_TTrounding, neg_TTrounding, pos_TTrounding] = computeError(errors_TTrounding);
     [err_randorth, neg_randorth, pos_randorth] = computeError(errors_randorth);
@@ -42,10 +42,10 @@ function f = PlotResult_RDVDAC3(varargin)
     
     hold off
     
-    % title('(a)')
-    xlabel('d''s set', 'FontSize', 18)
+    title('(a)')
+    xlabel('d', 'FontSize', 18)
     ylabel('Relative Error', 'FontSize', 18)
-    legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
+    % legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
 
@@ -63,7 +63,7 @@ function f = PlotResult_RDVDAC3(varargin)
     errorbar(d_set, times_TTrounding,       neg_TTrounding,       pos_TTrounding,       'o-', 'Color', '#3570b6','markersize',6,'linewidth',1.5);
 
     hold on
-    errorbar(d_set, times_pcg,  neg_pcg,  pos_pcg,  'o-', 'Color', '#23a6ba','markersize',6,'linewidth',1.5);
+    errorbar(d_set, times_pcg,  neg_pcg,  pos_pcg,  'p-', 'Color', '#5D31C4','markersize',6,'linewidth',1.5);
     errorbar(d_set, times_randorth,  neg_randorth,  pos_randorth,  '^-', 'Color', '#23a6ba','markersize',6,'linewidth',1.5);
     errorbar(d_set, times_orthrand,  neg_orthrand,  pos_orthrand,  '+-', 'Color', '#b482ba','markersize',6,'linewidth',1.5);
     errorbar(d_set, times_twosided, neg_twosided, pos_twosided, '*-', 'Color', '#c48f00','markersize',6,'linewidth',1.5);
@@ -71,8 +71,8 @@ function f = PlotResult_RDVDAC3(varargin)
     errorbar(d_set, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("(c)")
-    xlabel('d''s set', 'FontSize', 18)
+    title("(b)")
+    xlabel('d', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
     set(gca,'FontSize',14,"FontName", "Times New Roman", 'YScale','log')
@@ -103,10 +103,11 @@ function f = PlotResult_RDVDAC3(varargin)
     errorbar(d_set, round_times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("(b)")
-    xlabel('d''s set', 'FontSize', 18)
-    ylabel('Speedup', 'FontSize', 18)
+    title("(c)")
+    xlabel('d', 'FontSize', 18)
+    ylabel('Time of Recompression (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
+    legend('PCG', 'TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'Location', 'northwest')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
     axis square;
 end
