@@ -39,7 +39,7 @@ function f = PlotResult_sincos(varargin)
     
     hold off
     
-    % title('(a)')
+    title('(a)')
     xlabel('Target ranks', 'FontSize', 18)
     ylabel('Relative Error', 'FontSize', 18)
     legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
@@ -68,7 +68,7 @@ function f = PlotResult_sincos(varargin)
     errorbar(test_ranks, times_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
     
     hold off
-    % title("(c)")
+    title("(b)")
     xlabel('Target ranks', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
@@ -97,7 +97,7 @@ function f = PlotResult_sincos(varargin)
         errorbar(test_ranks, speedup_HaTT2, neg_HaTT2, pos_HaTT2, 'x-', 'Color', '#c45c30','markersize',6,'linewidth',1.5);
         
         hold off
-        % title("(b)")
+        title("(c)")
         xlabel('Target ranks', 'FontSize', 18)
         ylabel('Speedup', 'FontSize', 18)
         % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')

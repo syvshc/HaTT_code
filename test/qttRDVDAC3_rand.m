@@ -1,4 +1,4 @@
-function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
+function [round_time, time, phi, energy] = qttRDVDAC3_rand(d, ori_phi, method, bool_energy, bool_save)
   t0 = tic;
   energy = 0; 
 %   time = 0;
@@ -215,7 +215,7 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
       end
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
-      b = round(b, 1e-5);
+      b = round_randorth(b, test_rank);
       phi1 = phi;
       phi = dmrg_solve2(A, b, 1e-5, 'verb', 0);
       phi = round(phi, 1e-5);

@@ -1,4 +1,4 @@
-function [time, phi, energy] = RDVDAC3(d, ori_phi, bool_energy);
+function [time, phi, energy] = RDVDAC3(d, ori_phi, bool_energy, bool_save);
   tic
   energy = 0;
   n = 2 ^ d;
@@ -41,7 +41,16 @@ function [time, phi, energy] = RDVDAC3(d, ori_phi, bool_energy);
   end
 
   L = ichol(A);
+  % file_pcg = fopen("phi_pcg.mat");
   for t = 1 : T/dt
+    if bool_save
+      eval(['phi_pcg_', num2str(t), '= reshape(phi, [n, n, n]);']);
+      if isfile("phi_pcg.mat") == 1
+        eval(['save(''phi_pcg.mat'', ''phi_pcg_', num2str(t), ''', ''-append'')']);
+      else
+        eval(['save(''phi_pcg.mat'', ''phi_pcg_', num2str(t), ''')']);
+      end
+    end
     if t == 1 %#ok<ALIGN>
         phi_half = phi;
     else
@@ -50,7 +59,7 @@ function [time, phi, energy] = RDVDAC3(d, ori_phi, bool_energy);
     E_half = phi_half .* (phi_half .* phi_half - 1 - beta) / ep^2; 
     b = B * phi - dt * E_half;
     phi1 = phi; % 存储 phi_{n-1} 的值
-    [phi, ~] = pcg(A, b, 1e-5,100, L, L');
+    [phi, flag] = pcg(A, b, 1e-5,100, L, L');
 
     if bool_energy
       r(t + 1) = r(t) + hx * dot(E_half, phi - phi1);
@@ -63,5 +72,4 @@ function [time, phi, energy] = RDVDAC3(d, ori_phi, bool_energy);
   phi = reshape(phi, [n, n, n]);
   % mesh(xx, xx, phi);
   time = toc;
-  disp("PCG process ends");
 end
