@@ -1,4 +1,4 @@
-function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
+function [round_time, time, phi, energy] = qttRDVDAC3_circle(d, ori_phi, method, bool_energy, bool_save)
   t0 = tic;
   energy = 0; 
 %   time = 0;
@@ -6,19 +6,21 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
   J = [0, 1; 0, 0];
   
   n = 2 ^ d;
-  hx = 2 * pi / n;
-  T = 10;
+  hx = 2 / n;
+  T = 1;
   dt = 0.01;
-  gamma = 1;
-  beta = 1;
-  ep = 0.1;
+ep = 3.5 / 2^(d - 1);
+gamma = 6e-5;
+% ep = 0.1;
+beta = 2;
   
   sz = 2 * ones(1, 3 * d);
   if class(ori_phi) == "double"
     ori_phi = reshape(ori_phi, sz);
   end
+
   phi = tt_tensor(ori_phi);
-  er = zeros(3, T/dt);
+
   if bool_energy
     r = zeros(1, floor(T/dt) + 1);
     E0 = r;
@@ -174,7 +176,7 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
       end
       phi_half = round(phi_half, 1e-5);
       test_rank = phi_half.r;
-      % test_rank(2:end-1) = test_rank(2:end-1) + 3;
+      test_rank(2:end-1) = test_rank(2:end-1);
       switch method
         case "TTrounding"
           tic;
@@ -213,23 +215,20 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
           round_time(t) = toc;
           enddisp = ['> d = ', num2str(d), ': HaTT2 process ended'];
       end
-      er(1, t) = erank(E_half);
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
       b = round(b, 1e-5);
-      er(2, t) = erank(b);
       phi1 = phi;
       phi = dmrg_solve2(A, b, 1e-5, 'verb', 0);
       phi = round(phi, 1e-5);
-      er(3, t) = erank(phi);
-      % if mod(t, 10) == 0
-      % %     phi_mat = full(phi);
-      % %     phi_mat = reshape(phi_mat, [n, n]);
-      % %     contour(xx, xx, phi_mat);
-      % %     title(["t=", t]);
-      % %     pause;
+      if mod(t, 10) == 0
+          phi_mat = full(phi);
+          phi_mat = reshape(phi_mat, [n, n, n]);
+          mesh(phi_mat(:, :, n/2));
+          title(["t=", t]);
+          % pause;
       %   E_half.r
-      % end
+      end
       % aa = reshape(full(phi), n, n, n);
       
       % mesh(aa(:, :, n/2))

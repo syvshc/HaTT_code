@@ -1,4 +1,4 @@
-function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
+function [round_time, time, phi, energy] = qttRDVDAC2_circle(d, ori_phi, method, bool_energy, bool_save)
   t0 = tic;
   energy = 0; 
 %   time = 0;
@@ -6,28 +6,30 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
   J = [0, 1; 0, 0];
   
   n = 2 ^ d;
-  hx = 2 * pi / n;
-  T = 10;
+  hx = 2 / n;
+  T = 1;
   dt = 0.01;
-  gamma = 1;
-  beta = 1;
-  ep = 0.1;
+% ep = 3.5 / 2^(d - 1);
+gamma = 6e-5;
+ep = 0.1;
+beta = 0;
   
-  sz = 2 * ones(1, 3 * d);
+  sz = 2 * ones(1, 2 * d);
   if class(ori_phi) == "double"
     ori_phi = reshape(ori_phi, sz);
   end
+
   phi = tt_tensor(ori_phi);
-  er = zeros(3, T/dt);
+
   if bool_energy
     r = zeros(1, floor(T/dt) + 1);
     E0 = r;
     % II = reshape(ones(1, n ^ 3), sz);
     % II = tt_tensor(II);
     II = tt_tensor;
-    II.core = ones(1, 2 * 3 * d);
-    II.r = ones(1, 3 * d + 1);
-    II.n = 2 * ones(1, 3 * d);
+    II.core = ones(1, 2 * 2 * d);
+    II.r = ones(1, 2 * d + 1);
+    II.n = 2 * ones(1, 2 * d);
     II.d = length(II.n);
     II.ps = cumsum([1;II.n.*II.r(1:end - 1).*II.r(2:end)]);
   end
@@ -36,7 +38,7 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
   for key = 1:d
     if key == 1
       cores_laplace{key} = zeros(2, 2, 3);
-      cores_laplace{key}(:, :, 1) = 1/3 * (1 + 0.5 * dt * gamma * (6 / hx ^ 2 + beta / ep ^ 2)) * I - 0.5 * dt * gamma / hx ^ 2 * J - 0.5 * dt * gamma / hx ^ 2 * J';
+      cores_laplace{key}(:, :, 1) = 1/2 * (1 + 0.5 * dt * gamma * (2 / hx ^ 2 + beta / ep ^ 2)) * I - 0.5 * dt * gamma / hx ^ 2 * J - 0.5 * dt * gamma / hx ^ 2 * J';
       cores_laplace{key}(:, :, 2) = -0.5 * dt * gamma / hx ^ 2 * J;
       cores_laplace{key}(:, :, 3) = -0.5 * dt * gamma / hx ^ 2 * J';
     elseif key == d
@@ -90,62 +92,62 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
     end
   end
 
-  cores_mid = cell(d, 1);
-  for key = 1 : d
-    if key == 1
-      cores_mid{key} = zeros(2, 2, 2, 5);
-      cores_mid{key}(:, :, 1, 1) = I;
-      cores_mid{key}(:, :, 1, 2:4) = cores_laplace{1};
-      cores_mid{key}(:, :, 2, 5) = I;
-    elseif key == d
-      cores_mid{key} = zeros(2, 2, 5, 2);
-      cores_mid{key}(:, :, 1, 1) = I;
-      cores_mid{key}(:, :, 2:4, 2) = cores_laplace{d};
-      cores_mid{key}(:, :, 5, 2) = I;
-    else
-      cores_mid{key} = zeros(2, 2, 5, 5);
-      cores_mid{key}(:, :, 1, 1) = I;
-      cores_mid{key}(:, :, 2:4, 2:4) = cores_laplace{key};
-      cores_mid{key}(:, :, 5, 5) = I;
-    end
-  end
+  % cores_mid = cell(d, 1);
+  % for key = 1 : d
+  %   if key == 1
+  %     cores_mid{key} = zeros(2, 2, 2, 5);
+  %     cores_mid{key}(:, :, 1, 1) = I;
+  %     cores_mid{key}(:, :, 1, 2:4) = cores_laplace{1};
+  %     cores_mid{key}(:, :, 2, 5) = I;
+  %   elseif key == d
+  %     cores_mid{key} = zeros(2, 2, 5, 2);
+  %     cores_mid{key}(:, :, 1, 1) = I;
+  %     cores_mid{key}(:, :, 2:4, 2) = cores_laplace{d};
+  %     cores_mid{key}(:, :, 5, 2) = I;
+  %   else
+  %     cores_mid{key} = zeros(2, 2, 5, 5);
+  %     cores_mid{key}(:, :, 1, 1) = I;
+  %     cores_mid{key}(:, :, 2:4, 2:4) = cores_laplace{key};
+  %     cores_mid{key}(:, :, 5, 5) = I;
+  %   end
+  % end
 
   
   coresB_right = cores_right;
   coresB_left = cores_left;
-  coresB_mid = cores_mid;
+  % coresB_mid = cores_mid;
 
-  coresB_right{1}(:, :, 1, 1) = 1/3 * (1 - 0.5 * dt * gamma * (6 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
+  coresB_right{1}(:, :, 1, 1) = 1/2 * (1 - 0.5 * dt * gamma * (4 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
   coresB_right{1}(:, :, 1, 2) = 0.5 * dt * gamma / hx ^ 2 * J;
   coresB_right{1}(:, :, 1, 3) = 0.5 * dt * gamma / hx ^ 2 * J';
 
-  coresB_left{1}(:, :, 2) = 1/3 * (1 - 0.5 * dt * gamma * (6 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
+  coresB_left{1}(:, :, 2) = 1/2 * (1 - 0.5 * dt * gamma * (4 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
   coresB_left{1}(:, :, 3) = 0.5 * dt * gamma / hx ^ 2 * J;
   coresB_left{1}(:, :, 4) = 0.5 * dt * gamma / hx ^ 2 * J';
 
-  coresB_mid{1}(:, :, 1, 2) = 1/3 * (1 - 0.5 * dt * gamma * (6 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
-  coresB_mid{1}(:, :, 1, 3) = 0.5 * dt * gamma / hx ^ 2 * J;
-  coresB_mid{1}(:, :, 1, 4) = 0.5 * dt * gamma / hx ^ 2 * J';
+  % coresB_mid{1}(:, :, 1, 2) = 1/3 * (1 - 0.5 * dt * gamma * (6 / hx ^ 2 + beta / ep ^ 2)) * I + 0.5 * dt * gamma / hx ^ 2 * J + 0.5 * dt * gamma / hx ^ 2 * J';
+  % coresB_mid{1}(:, :, 1, 3) = 0.5 * dt * gamma / hx ^ 2 * J;
+  % coresB_mid{1}(:, :, 1, 4) = 0.5 * dt * gamma / hx ^ 2 * J';
   
-  A = tt_matrix([cores_left; cores_mid; cores_right]);
-  B  = tt_matrix([coresB_left; coresB_mid; coresB_right]);
+  A = tt_matrix([cores_left; cores_right]);
+  B  = tt_matrix([coresB_left; coresB_right]);
   
   if bool_energy
     coresL_left = cores_left;
-    coresL_mid = cores_mid;
+    % coresL_mid = cores_mid;
     coresL_right = cores_right;
 
-    coresL_right{1}(:, :, 1, 1) = 1/3 * (6 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
+    coresL_right{1}(:, :, 1, 1) = 1/2 * (4 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
     coresL_right{1}(:, :, 1, 2) = -1 / hx ^ 2 * J;
     coresL_right{1}(:, :, 1, 3) = -1 / hx ^ 2 * J';
   
-    coresL_left{1}(:, :, 2) = 1/3 * (6 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
+    coresL_left{1}(:, :, 2) = 1/2 * (4 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
     coresL_left{1}(:, :, 3) = -1 / hx ^ 2 * J;
     coresL_left{1}(:, :, 4) = -1 / hx ^ 2 * J';
   
-    coresL_mid{1}(:, :, 1, 2) = 1/3 * (6 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
-    coresL_mid{1}(:, :, 1, 3) = -1 / hx ^ 2 * J;
-    coresL_mid{1}(:, :, 1, 4) = -1 / hx ^ 2 * J';
+    % coresL_mid{1}(:, :, 1, 2) = 1/3 * (6 / hx ^ 2 + beta / ep ^ 2) * I -1 / hx ^ 2 * J -1 / hx ^ 2 * J';
+    % coresL_mid{1}(:, :, 1, 3) = -1 / hx ^ 2 * J;
+    % coresL_mid{1}(:, :, 1, 4) = -1 / hx ^ 2 * J';
 
     L  = tt_matrix([coresL_left; coresL_mid; coresL_right]);
     r_tmp = round(phi .* phi, 1e-5);
@@ -174,7 +176,7 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
       end
       phi_half = round(phi_half, 1e-5);
       test_rank = phi_half.r;
-      % test_rank(2:end-1) = test_rank(2:end-1) + 3;
+      test_rank(2:end-1) = test_rank(2:end-1);
       switch method
         case "TTrounding"
           tic;
@@ -213,23 +215,20 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
           round_time(t) = toc;
           enddisp = ['> d = ', num2str(d), ': HaTT2 process ended'];
       end
-      er(1, t) = erank(E_half);
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
       b = round(b, 1e-5);
-      er(2, t) = erank(b);
       phi1 = phi;
       phi = dmrg_solve2(A, b, 1e-5, 'verb', 0);
       phi = round(phi, 1e-5);
-      er(3, t) = erank(phi);
-      % if mod(t, 10) == 0
-      % %     phi_mat = full(phi);
-      % %     phi_mat = reshape(phi_mat, [n, n]);
-      % %     contour(xx, xx, phi_mat);
-      % %     title(["t=", t]);
-      % %     pause;
+      if mod(t, 10) == 0
+          phi_mat = full(phi);
+          phi_mat = reshape(phi_mat, [n, n]);
+          mesh(phi_mat);
+          title(["t=", t]);
+          % pause;
       %   E_half.r
-      % end
+      end
       % aa = reshape(full(phi), n, n, n);
       
       % mesh(aa(:, :, n/2))
