@@ -1,10 +1,16 @@
 clear
-d_set = [7, 8, 9, 12, 15];
+d_set = [10, 11, 12, 15];
 
 %% setup and initialize
 % number of tests
-S = 7;
+S = 1;
 L = length(d_set);
+er_TTrounding = cell(L, 1);
+er_randorth = cell(L, S);
+er_orthrand = cell(L, S);
+er_twosided = cell(L, S);
+er_HaTT1 = cell(L, S);
+er_HaTT2 = cell(L, S);
 errors_TTrounding = zeros(L, S);
 errors_randorth = zeros(L, S);
 errors_orthrand = zeros(L, S);
@@ -82,16 +88,18 @@ ori_phi_tt.d = length(ori_phi_tt.n);
 ori_phi_tt.ps = cumsum([1;ori_phi_tt.n.*ori_phi_tt.r(1:end - 1).*ori_phi_tt.r(2:end)]);
 ori_phi_tt = 0.2 * ori_phi_tt;
   try 
-    [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "TTrounding", bool_energy, bool_save);
+    [round_time, time, phi_TTrounding, energy, er] = qttRDVDAC3(d, ori_phi_tt, "TTrounding", bool_energy, bool_save);
+    normphi = norm(phi_TTrounding);
     time_TTrounding(i, :) = time;
     round_time_TTrounding(i, :) = sum(round_time);
     energy_TTrounding{i} = energy;
+    er_TTrounding{i} = er;
       try
-        errors_TTrounding(i, :) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_TTrounding(i, :) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_TTrounding(i, :) = inf;
       end
-%     errors_TTrounding(i, :) = norm(phi - phi_pcg) / norm(phi_pcg);
+%     errors_TTrounding(i, :) = norm(phi - phi_TTrounding) / normphi;
   catch
     time_TTrounding(i, :) = inf;
     round_time_TTrounding(i, :) = inf;
@@ -100,12 +108,13 @@ ori_phi_tt = 0.2 * ori_phi_tt;
   for j = 1:S
     disp(['S = ', num2str(j), ' is being tested.']);
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "randorth", bool_energy, bool_save);
+      [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi_tt, "randorth", bool_energy, bool_save);
       time_randorth(i, j) = time;
       round_time_randorth(i, j) = sum(round_time);
       energy_randorth{i, j} = energy;
+      er_randorth{i, j} = er;
       try
-        errors_randorth(i, j) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_randorth(i, j) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_randorth(i, j) = inf;
       end
@@ -115,12 +124,13 @@ ori_phi_tt = 0.2 * ori_phi_tt;
       errors_randorth(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "orthrand", bool_energy, bool_save);
+      [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi_tt, "orthrand", bool_energy, bool_save);
       time_orthrand(i, j) = time;
       round_time_orthrand(i, j) = sum(round_time);
       energy_orthrand{i, j} = energy;
+      er_orthrand{i, j} = er;
       try
-        errors_orthrand(i, j) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_orthrand(i, j) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_orthrand(i, j) = inf;
       end
@@ -130,12 +140,13 @@ ori_phi_tt = 0.2 * ori_phi_tt;
       errors_orthrand(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "twosided", bool_energy, bool_save);
+      [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi_tt, "twosided", bool_energy, bool_save);
       time_twosided(i, j) = time;
       round_time_twosided(i, j) = sum(round_time);
       energy_twosided{i, j} = energy;
+      er_twosided{i, j} = er;
       try
-        errors_twosided(i, j) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_twosided(i, j) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_twosided(i, j) = inf;
       end
@@ -145,12 +156,13 @@ ori_phi_tt = 0.2 * ori_phi_tt;
       errors_twosided(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "HaTT1", bool_energy, bool_save);
+      [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi_tt, "HaTT1", bool_energy, bool_save);
       time_HaTT1(i, j) = time;
       round_time_HaTT1(i, j) = sum(round_time);
       energy_HaTT1{i, j} = energy;
+      er_HaTT1{i, j} = er;
       try
-        errors_HaTT1(i, j) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_HaTT1(i, j) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_HaTT1(i, j) = inf;
       end
@@ -160,12 +172,13 @@ ori_phi_tt = 0.2 * ori_phi_tt;
       errors_HaTT1(i, j) = inf;
     end
     try
-      [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi_tt, "HaTT2", bool_energy, bool_save);
+      [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi_tt, "HaTT2", bool_energy, bool_save);
       time_HaTT2(i, j) = time;
       round_time_HaTT2(i, j) = sum(round_time);
       energy_HaTT2{i, j} = energy;
+      er_HaTT2{i, j} = er;
       try
-        errors_HaTT2(i, j) = norm(phi - phi_pcg) / norm(phi_pcg);
+        errors_HaTT2(i, j) = norm(phi - phi_TTrounding) / normphi;
       catch
         errors_HaTT2(i, j) = inf;
       end
@@ -176,4 +189,4 @@ ori_phi_tt = 0.2 * ori_phi_tt;
     end
   end
 end
-save("qttRDVDAC3.mat", "-regexp", "d_set", "^errors_", "^time_", "^round_time_", "^energy_");
+% save("qttRDVDAC3.mat", "-regexp", "d_set", "^errors_", "^time_", "^round_time_", "^energy_");

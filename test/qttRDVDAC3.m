@@ -1,4 +1,4 @@
-function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
+function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
   t0 = tic;
   energy = 0; 
 %   time = 0;
@@ -18,7 +18,7 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
     ori_phi = reshape(ori_phi, sz);
   end
   phi = tt_tensor(ori_phi);
-
+  er = zeros(3, T/dt);
   if bool_energy
     r = zeros(1, floor(T/dt) + 1);
     E0 = r;
@@ -213,12 +213,15 @@ function [round_time, time, phi, energy] = qttRDVDAC3(d, ori_phi, method, bool_e
           round_time(t) = toc;
           enddisp = ['> d = ', num2str(d), ': HaTT2 process ended'];
       end
+      er(1, t) = erank(E_half);
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
       b = round(b, 1e-5);
+      er(2, t) = erank(b);
       phi1 = phi;
       phi = dmrg_solve2(A, b, 1e-5, 'verb', 0);
       phi = round(phi, 1e-5);
+      er(3, t) = erank(phi);
       % if mod(t, 10) == 0
       % %     phi_mat = full(phi);
       % %     phi_mat = reshape(phi_mat, [n, n]);

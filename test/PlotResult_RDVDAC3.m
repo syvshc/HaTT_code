@@ -47,6 +47,9 @@ function f = PlotResult_RDVDAC3(varargin)
     ylabel('Relative Error', 'FontSize', 18)
     % legend('TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
+
+    xlim([6.5, 9.5]);
+    xticks([7, 8. 9])
     axis square;
 
     % Post-process timings
@@ -75,7 +78,10 @@ function f = PlotResult_RDVDAC3(varargin)
     xlabel('d', 'FontSize', 18)
     ylabel('Time (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
+    legend('TT-Rounding', 'PCG', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'Location', 'southeast')
     set(gca,'FontSize',14,"FontName", "Times New Roman", 'YScale','log')
+    xlim([6.5, 15.5]);
+    xticks(d_set)
     axis square;
 
         
@@ -107,7 +113,9 @@ function f = PlotResult_RDVDAC3(varargin)
     xlabel('d', 'FontSize', 18)
     ylabel('Time of Recompression (s)', 'FontSize', 18)
     % legend('TTrounding', 'HaTT', 'HaTT-no-SVD', 'randorth', 'orthrand')
-    legend('PCG', 'TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'Location', 'northwest')
+    % legend('PCG', 'TT-Rounding', 'RandOrth', 'OrthRand', 'TwoSided', 'HaTT-1', 'HaTT-2', 'Location', 'northwest')
     set(gca,'FontSize',14,"FontName", "Times New Roman")
+    xlim([6.5, 15.5]);
+    xticks(d_set)
     axis square;
 end
