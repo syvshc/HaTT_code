@@ -1,4 +1,4 @@
-function z = HBF2(A, varargin)
+function z = HBF1(A, varargin)
   % This function computes the inner product of x and A.*y for nargin == 3 or A.*x for nargin == 2;
   % A, X, y are all vectors in tensor train format.
   % In matrix form, we consider matrix B as a diagonal matrix with A on the diagonal

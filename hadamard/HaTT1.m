@@ -1,4 +1,4 @@
-function [varargout] = HaTT2(Y, Z, varargin)
+function [varargout] = HaTT1(Y, Z, varargin)
 % HADMARD_ROUND  Round the Hadamard product of two TT-tensor with RandOrth
 % Y and Z are TT-tensors of the same physics modes,
 % If the target TT-rank is not given, we'll use the size of each unfolding of Y as the default target TT-rank.
@@ -44,7 +44,7 @@ function [varargout] = HaTT2(Y, Z, varargin)
   time_HMcore0_no_svd = 0;
   % generate the sketch phase
   HPCRL_no_svd = tic;
-  W = HPCRL2(Y, Z, R);
+  W = HPCRL1(Y, Z, R);
   time_HPCRL_no_svd = toc(HPCRL_no_svd);
   cr_w = W.core; ps_w = W.ps;
   % init ps and core of X

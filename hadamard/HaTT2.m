@@ -1,4 +1,4 @@
-function [varargout] = HaTT1(Y, Z, l, option)
+function [varargout] = HaTT2(Y, Z, l, option)
 % HADMARD_ROUND  Round the Hadamard product of two TT-tensor with RandOrth
 % Y and Z are TT-tensors of the same physics modes,
 % If the target TT-rank is not given, we'll use the size of each unfolding of Y as the default target TT-rank.
@@ -53,9 +53,9 @@ end
   % generate the sketch phase
   HPCRL = tic;
   if isfield(option, 'trunc')
-    W = HPCRL1(Y, Z, R, option.trunc);
+    W = HPCRL2(Y, Z, R, option.trunc);
   else
-    W = HPCRL1(Y, Z, R);
+    W = HPCRL2(Y, Z, R);
   end
   % W = HPCRL1(Y, Z, R);
   time_HPCRL = toc(HPCRL);

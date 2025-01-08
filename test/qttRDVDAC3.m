@@ -1,4 +1,11 @@
 function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bool_energy, bool_save)
+  arguments
+    d (1, 1) {mustBeInteger}
+    ori_phi
+    method {mustBeMember(method, ["TTrounding", "randorth", "orthrand", "twosided", "HaTT1", "HaTT2"])}
+    bool_energy {mustBeInteger} = 0
+    bool_save {mustBeInteger} = 0
+  end
   t0 = tic;
   energy = 0; 
 %   time = 0;
@@ -7,7 +14,7 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
   
   n = 2 ^ d;
   hx = 2 * pi / n;
-  T = 10;
+  T = 0.1;
   dt = 0.01;
   gamma = 1;
   beta = 1;
@@ -167,19 +174,20 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
         eval(['save(''phi_hatt2.mat'', ''phi_hatt2_', num2str(t), ''')']);
       end
     end
+    test_rank = 30;
       if t == 1
           phi_half = phi;
       else
           phi_half = .5 * (3 * phi - phi1);
       end
-      phi_half = round(phi_half, 1e-5);
-      test_rank = phi_half.r;
+      phi_half = round(phi_half, eps, test_rank);
+      % test_rank = phi_half.r;
       % test_rank(2:end-1) = test_rank(2:end-1) + 3;
       switch method
         case "TTrounding"
           tic;
-          E_half = round(phi_half .* phi_half, 1e-5);
-          E_half = round(E_half .* phi_half, 1e-5); 
+          E_half = round(phi_half .* phi_half, eps, test_rank);
+          E_half = round(E_half .* phi_half, eps, test_rank); 
           round_time(t) = toc;
           enddisp = ['> d = ', num2str(d), ': TTrounding process ended'];
         case "randorth"
@@ -216,11 +224,11 @@ function [round_time, time, phi, energy, er] = qttRDVDAC3(d, ori_phi, method, bo
       er(1, t) = erank(E_half);
       E_half = 1 / ep ^ 2 * (E_half - (1 + beta) * phi_half);
       b = B * phi - dt * E_half;
-      b = round(b, 1e-5);
+      b = round(b, eps, 80);
       er(2, t) = erank(b);
       phi1 = phi;
       phi = dmrg_solve2(A, b, 1e-5, 'verb', 0);
-      phi = round(phi, 1e-5);
+      phi = round(phi, eps, test_rank);
       er(3, t) = erank(phi);
       % if mod(t, 10) == 0
       % %     phi_mat = full(phi);
